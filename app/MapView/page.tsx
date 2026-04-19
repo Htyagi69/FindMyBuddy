@@ -138,7 +138,7 @@ const pinBackground = new PinElement({
                 console.log("routes",routes);
                 if(routes && routes.length>0){
                     const mapPolyLines=routes[0].createPolylines();
-                        mapPolyLines.forEach((polyline: typeof Polyline) => {
+                        mapPolyLines.forEach((polyline : any) => {
                              polyline.setMap(mapInstance);
                              currentPolyLines.push(polyline)
                             });
