@@ -36,9 +36,10 @@ const mapref=useRef<HTMLDivElement>(null)
         const request={
             origin:originLatLng,
             destination:destinationLatLng,
-            fields:["path"],
+            // fields:["path"],
+            fields: ["routes.polyline", "routes.duration", "routes.distanceMeters"],
             computeAlternativeRoutes:false,
-            travelMode:'WALKING',
+            travelMode:'WALKING' as const,
             // routeModifiers:{
             //     avoidTolls:true,
             // }
