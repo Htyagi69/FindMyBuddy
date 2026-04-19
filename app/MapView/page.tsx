@@ -57,7 +57,7 @@ const mapref=useRef<HTMLDivElement>(null)
             try{
                 // Load the Maps library.
                 const { Map } = (await importLibrary('maps'));
-                const {AdvancedMarkerElement,PinElement,collisionBehavior}=await importLibrary('marker')
+                const {AdvancedMarkerElement,PinElement}=await importLibrary('marker')
                 const {Route} =await importLibrary('routes')
                 const {Polyline}=await importLibrary('maps')
                 const {lat,lng}=await getUserLocation();
@@ -124,7 +124,7 @@ const pinBackground = new PinElement({
             map:mapInstance,
             title: "📍 Your are friend is here!",
             content:pinbuddyBackground.element,
-            collisionBehavior: collisionBehavior,
+            collisionBehavior: 'REQUIRED',
         })
 
         
