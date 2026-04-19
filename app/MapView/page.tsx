@@ -2,7 +2,7 @@
 // Import the needed libraries.
 import { setOptions, importLibrary } from '@googlemaps/js-api-loader';
 import { useEffect, useRef } from 'react';
-import {writePosition,readPostion} from '../db/page'
+import {writePosition,readPostion} from '../db/firebase'
 // import Route
 
 const API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_DEMO_API_KEY;
