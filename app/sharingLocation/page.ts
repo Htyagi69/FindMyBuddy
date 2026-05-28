@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { useEffect,useState } from "react";
 
-export default function shareLocation(){
+export default function useshareLocation(){
     const [location,setLocation]=useState<{lat:number;lng:number}| null>(null)
     const [error,setError]=useState<GeolocationPositionError| null>(null)
    useEffect(()=>{
@@ -21,7 +21,7 @@ export default function shareLocation(){
         setError(err);
        },{
         enableHighAccuracy:true,
-        timeout:5000,
+        timeout:10000,
         maximumAge:0
        });
        return()=>{

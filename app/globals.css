@@ -117,6 +117,18 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+/* Conceptual breakdown of the geometric borders used to build the arrow halves */
+.left-half {
+  border-right: 15px solid #1a73e8; /* Vibrant Google Blue */
+  border-top: 30px solid transparent;
+  border-bottom: 10px solid transparent;
+}
+.right-half {
+  border-left: 15px solid #1557b0;  /* Darker Shadow Blue */
+  border-top: 30px solid transparent;
+  border-bottom: 10px solid transparent;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

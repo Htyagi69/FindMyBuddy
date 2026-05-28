@@ -13,6 +13,13 @@ interface userPos{
     buddyLng:number;
     altitude:number,
 }
+interface userPosition{
+    lobbyId:string,
+    userId:string;
+    lat:number;
+    lng:number;
+    heading:number,
+}
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -38,7 +45,7 @@ export function writePosition({userId,Lat,Lng,buddyLat,buddyLng,altitude}:userPo
         mylng:Lng,
         buddyLat:buddyLat,
         buddyLng:buddyLng,
-         altitude: altitude,
+        altitude: altitude,
         timestamp:Date.now()
     })
 }
@@ -46,9 +53,28 @@ export function writePosition({userId,Lat,Lng,buddyLat,buddyLng,altitude}:userPo
 export  function readPostion(userId:number,callback:(data:any)=>void){
     const posref = ref(database, `pos/${userId}`);
     return onValue(posref, (snapshot) => {
-  const data = snapshot.val();
-  if(data){
+    const data = snapshot.val();
+    if(data){
      callback(data);
   }
 });
+}
+
+export function LobbyShemaWrite({lobbyId,userId,lat,lng,heading}:userPosition){
+     set(ref(database,`lobbies/${lobbyId}/{createdAt:${Date.now()}/users/${userId}`),{
+       lat:lat,
+       lng:lng,
+       heading:heading,
+       lastUpdated:Date.now(),
+     })
+}
+
+export function LobbySchemaRead({lobbyId,userId}:userPosition,callback:(data:any)=>void){
+    const posref=ref(database,`lobbies/${lobbyId}/users/${userId}`);
+    return onValue(posref,(snap)=>{
+        const data=snap.val();
+        if(data){
+            callback(data);
+        }
+    })
 }
