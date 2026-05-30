@@ -1,14 +1,14 @@
 "use client"
 import { setOptions, importLibrary } from '@googlemaps/js-api-loader';
 import { useEffect, useRef, useState } from 'react';
-import { writePosition, readPostion } from '../db/firebase'
+import { writePosition, readPostion } from '@/db/firebase'
 import { Button } from '@/components/ui/button';
 
-import useshareLocation from '../sharingLocation/page';
-import { drawPolyLines } from '../drawPolylines/page';
-import {getBearing,getRelativeBearing,getDistance, bearingtoCardinal} from '../compassNavigation/page'
-import {LobbyInstance} from '../LobbyInstance/page'
-import { Markers } from '../Markers/page';
+import useshareLocation from '@/hooks/useSharingLocation';
+import { drawPolyLines } from '../../utils/drawPolylines';
+import {getBearing,getRelativeBearing,getDistance, bearingtoCardinal} from '../../utils/compassNavigation'
+import {LobbyInstance} from '../../utils/LobbyInstance'
+import { Markers } from '@/hooks/useMarkers';
 // import Route
 
 const API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_DEMO_API_KEY;

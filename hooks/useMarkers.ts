@@ -1,5 +1,5 @@
 import { importLibrary } from '@googlemaps/js-api-loader';
-import { useState,useRef, RefObject } from 'react';
+import { RefObject } from 'react';
 
 export const createGoogleArrow = (arrowId: string, isBuddy: boolean = false) => {
   
