@@ -1,5 +1,5 @@
 import { importLibrary } from '@googlemaps/js-api-loader';
-import { useState } from 'react';
+import { useState,useRef, RefObject } from 'react';
 
 export const createGoogleArrow = (arrowId: string, isBuddy: boolean = false) => {
   
@@ -79,9 +79,13 @@ const userIcon = document.createElement('img');
 
         const arrow = createGoogleArrow('user-nav-arrow', false); // Your blue arrow
 if(start){
+  if(container.contains(pinBackground))
+     container.removeChild(pinBackground);
      container.appendChild(arrow);
 }else{
   container.appendChild(pinBackground.element);
+  if(container.contains(arrow))
+     container.removeChild(arrow);
 }
 
 // Your friend's marker stays simple (no compass arrow needed for them)
@@ -116,110 +120,59 @@ const buddyIcon = document.createElement('img');
          return {pinBackground:container,pinbuddyBackground:buddycontainer,userArrow:arrow,buddyArrow:buddyarrow}
   }
 
+  interface LatLngLiteral {
+  lat: number;
+  lng: number;
+  altitude?: number; // Optional, since you included it in some places
+}
 
+  interface marker{
+    mapInstance:google.maps.Map
+    mypos:LatLngLiteral
+    friendpos:LatLngLiteral
+    myMarkerRef:RefObject<google.maps.marker.AdvancedMarkerElement|null>
+    myFriendMarkerRef:RefObject<google.maps.marker.AdvancedMarkerElement|null>
+    userArrowRef:RefObject<HTMLDivElement | null>;
+    start:boolean
+  }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// import { importLibrary } from '@googlemaps/js-api-loader';
-
-// export const createCustomPins=async()=>{
-     
-// const { PinElement } = await importLibrary('marker') as google.maps.MarkerLibrary;
-
-//  const container = document.createElement('div');
-//   container.style.position = 'relative';
-//   container.style.width = '45px';
-//   container.style.height = '45px';
-  
-//   // 1. Create the Directional Navigation Arrow (Cone)
-//   const arrow = document.createElement('div');
-//   arrow.id = 'user-nav-arrow'; // We use this ID to find and rotate it later
-//   arrow.style.position = 'absolute';
-//   arrow.style.top = '-10px';
-//   arrow.style.left = '12px';
-//   arrow.style.width = '0';
-//   arrow.style.height = '0';
-//   // Creates a crisp triangle pointing UP using standard CSS borders
-//   arrow.style.borderLeft = '10px solid transparent';
-//   arrow.style.borderRight = '10px solid transparent';
-//   arrow.style.borderBottom = '15px solid #38bdf8'; // Sky blue arrow
-//   arrow.style.transition = 'transform 0.2s ease-out'; // Smooth rotation movement
-//   arrow.style.transformOrigin = 'bottom center';
-
-//   // 2. Create your profile photo marker inside a base pin
-//   const pinBackground = new PinElement({
-//     background: "red", // The pin color
-//     borderColor: "#137333",
-//     glyphColor: "red",
-// });
-
-// // 2. Create the image for the photo
-// const userIcon = document.createElement('img');
-//         userIcon.src = '/me.png'; 
-//         userIcon.style.width = '32px';  // Keep it small to fit in the pin
-//         userIcon.style.height = '32px';
-//         userIcon.style.borderRadius = '50%'; // Make the photo circular
-//         userIcon.style.objectFit = 'cover';
-        
-//         // 3. Put the photo inside the Pin's glyph area
-//         pinBackground.glyph = userIcon;
-
+  export const Markers=async({mapInstance,mypos,friendpos,myMarkerRef,myFriendMarkerRef,userArrowRef,start}:marker)=>{
     
+    const { AdvancedMarkerElement } = await importLibrary('marker')
 
-//   // Stitch them together
-//   container.appendChild(arrow);
-//   container.appendChild(pinBackground.element);
-  
-//   // Your friend's marker stays simple (no compass arrow needed for them)
-//   const pinbuddyBackground = new PinElement({
-//     background: "blue",
-//     borderColor: "#137333",
-//     glyphColor: "transparent",
-//   });
+         //Marker on you
+                    const { pinBackground, pinbuddyBackground,userArrow } = await createCustomPins(start);
+                    if(userArrowRef)
+                        userArrowRef.current=userArrow;
 
-  
-//    const buddycontainer = document.createElement('div');
-//     buddycontainer.style.position = 'relative';
-//     buddycontainer.style.width = '45px';
-//     buddycontainer.style.height = '45px';
-//     // 1. Create the Directional Navigation Arrow (Cone)
-//   const buddyarrow = document.createElement('div');
-//   buddyarrow.id = 'user-nav-buddyarrow'; // We use this ID to find and rotate it later
-//   buddyarrow.style.position = 'absolute';
-//   buddyarrow.style.top = '-10px';
-//   buddyarrow.style.left = '12px';
-//   buddyarrow.style.width = '0';
-//   buddyarrow.style.height = '0';
-//   // Creates a crisp triangle pointing UP using standard CSS borders
-//   buddyarrow.style.borderLeft = '10px solid transparent';
-//   buddyarrow.style.borderRight = '10px solid transparent';
-//   buddyarrow.style.borderBottom = '15px solid #38bdf8'; // Sky blue buddyarrow
-//   buddyarrow.style.transition = 'transform 0.2s ease-out'; // Smooth rotation movement
-//   arrow.style.transformOrigin = 'bottom center';
+                   if(myMarkerRef.current){
 
-//   const buddyIcon = document.createElement('img');
-//   buddyIcon.src = '/friend.png'; 
-//   buddyIcon.style.width = '32px';       
-//   buddyIcon.style.height = '32px'; 
-//   buddyIcon.style.borderRadius = '50%'; 
-//   buddyIcon.style.objectFit = 'cover';
-//   pinbuddyBackground.glyph = buddyIcon;
-  
-//   buddycontainer.appendChild(buddyarrow);
-//   buddycontainer.appendChild(pinbuddyBackground.element);
-//          return {pinBackground:container,pinbuddyBackground:buddycontainer}
-//         }
+                     myMarkerRef.current.position=mypos;
+                     myMarkerRef.current.content=pinBackground;
+                    }
+                    else{
+                      myMarkerRef.current = new AdvancedMarkerElement({
+                       position: mypos,
+                       map: mapInstance,
+                       title: "📍 You are here!",
+                       content: pinBackground
+                      })
+                    }
+
+                    if(myFriendMarkerRef.current){
+                      
+                      myFriendMarkerRef.current.position=friendpos;
+                      myFriendMarkerRef.current.content=pinbuddyBackground;
+                    }
+                    else{
+                      myFriendMarkerRef.current = new AdvancedMarkerElement({
+                        position: friendpos,
+                        map: mapInstance,
+                        title: "📍 Your are friend is here!",
+                        content: pinbuddyBackground,
+                        collisionBehavior: 'REQUIRED',
+                      })
+                    }
+  }
+
+
