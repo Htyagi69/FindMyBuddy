@@ -50,7 +50,7 @@ export const createGoogleArrow = (arrowId: string, isBuddy: boolean = false) => 
   return disc;
 };
 
-export const createCustomPins=async(start:boolean)=>{
+const createCustomPins=async(start:boolean)=>{
      
 const { PinElement } = await importLibrary('marker') as google.maps.MarkerLibrary;
 
@@ -79,8 +79,8 @@ const userIcon = document.createElement('img');
 
         const arrow = createGoogleArrow('user-nav-arrow', false); // Your blue arrow
 if(start){
-  if(container.contains(pinBackground))
-     container.removeChild(pinBackground);
+  if(container.contains(pinBackground.element))
+     container.removeChild(pinBackground.element);
      container.appendChild(arrow);
 }else{
   container.appendChild(pinBackground.element);

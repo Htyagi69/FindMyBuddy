@@ -153,6 +153,9 @@ useEffect(()=>{
                 <Button variant="secondary" className='absolute top-4 right-4 border-2 border-amber-400 cursor-pointer bg-white hover:bg-slate-100 z-10' onClick={() => setStart(!start)}>
                     {start ? "Stop Navigation" : "Start Navigation"}
                 </Button>
+                <p className="font-semibold text-slate-700 mt-2">
+                    Distance : {distance >= 1000 ? `${(distance / 1000).toFixed(1)} km` : `${Math.round(distance)}m`}
+                </p>
             </div>
         </div>
     );
