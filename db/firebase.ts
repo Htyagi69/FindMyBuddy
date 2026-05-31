@@ -61,7 +61,7 @@ export  function readPostion(userId:number,callback:(data:any)=>void){
 }
 
 export function LobbyShemaWrite({lobbyId,userId,lat,lng,heading}:userPosition){
-     set(ref(database,`lobbies/${lobbyId}/{createdAt:${Date.now()}/users/${userId}`),{
+     set(ref(database,`?lobby/${lobbyId}/users/${userId}`),{
        lat:lat,
        lng:lng,
        heading:heading,
@@ -69,8 +69,8 @@ export function LobbyShemaWrite({lobbyId,userId,lat,lng,heading}:userPosition){
      })
 }
 
-export function LobbySchemaRead({lobbyId,userId}:userPosition,callback:(data:any)=>void){
-    const posref=ref(database,`lobbies/${lobbyId}/users/${userId}`);
+export function LobbySchemaRead(lobbyId:string,callback:(data:any)=>void){
+    const posref=ref(database,`?lobby/${lobbyId}/users`);
     return onValue(posref,(snap)=>{
         const data=snap.val();
         if(data){

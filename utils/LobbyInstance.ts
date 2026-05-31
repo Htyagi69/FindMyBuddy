@@ -1,7 +1,7 @@
 
 
-export const LobbyInstance=()=>{
-    const lobbyId=Math.random().toString(36).substring(2,8).toUpperCase();
-    const shareUrl=`${window.location.origin}/lobby/${lobbyId}`;
+export const LobbyInstance=(lobbyId:string,userId:string)=>{
+   
+    const shareUrl=`${window.location.origin}/MapView/lobby/${lobbyId}/${userId}`;
     return shareUrl;
 }
