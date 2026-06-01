@@ -20,7 +20,8 @@ import { importLibrary } from '@googlemaps/js-api-loader';
             fields:["path"],
             // fields: ["routes.polyline", "routes.duration", "routes.distanceMeters"],
             computeAlternativeRoutes:false,
-            travelMode:'WALKING' as const,
+            // travelMode:'WALKING' as const,
+            travelMode:'DRIVING' as const,
             // routeModifiers:{
             //     avoidTolls:true,
             // }

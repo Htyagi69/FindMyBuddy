@@ -76,7 +76,7 @@ export default function MapInterface({lobbyId,userId}:{lobbyId:string,userId:str
             
             console.log("lobbyId",lobbyId);
         const mypos = { lat: location.lat, lng: location.lng, altitude: 20 }
-        const friendpos = buddypos?{...buddypos,altitude:20}:{ lat: 28.676731, lng: 77.500534, altitude: 20 };
+        const friendpos = buddypos?{...buddypos,altitude:20}:{ lat: location.lat, lng: location.lng, altitude: 20 };
         
         LobbyShemaWrite({lobbyId:lobbyId, userId: userId, lat: location.lat, lng: location.lng,  heading: Bearing });
         
@@ -91,7 +91,7 @@ export default function MapInterface({lobbyId,userId}:{lobbyId:string,userId:str
                         console.log("data",data);
                         const allusersIds=Object.keys(data);
                         
-                        const buddyId=allusersIds.find((id)=>id.startsWith("buddy-")&& id!==userId)
+                        const buddyId=allusersIds.find((id)=>id!==userId)
                         const buddyData=buddyId?data[buddyId]:null;
                         const myData=userId?data[userId]:null;
                          console.log("bearing",Bearing);
