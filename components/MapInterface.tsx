@@ -25,7 +25,9 @@ export default function MapInterface({lobbyId,userId}:{lobbyId:string,userId:str
 
     const [mapReady,setMapReady]=useState(false)
     const [start,setStart]=useState(false)
-    
+    const [Bearing,setBearing]=useState<number>(0);
+    const [buddypos,setBuddypos]=useState<{lat:number,lng:number}|null>(null);
+
     let currentPolyLines: any[] = []
     
 //MapInstance 
@@ -74,9 +76,9 @@ export default function MapInterface({lobbyId,userId}:{lobbyId:string,userId:str
             
             console.log("lobbyId",lobbyId);
         const mypos = { lat: location.lat, lng: location.lng, altitude: 20 }
-        const friendpos = { lat: 28.676731, lng: 77.500534, altitude: 20 };
+        const friendpos = buddypos?{...buddypos,altitude:20}:{ lat: 28.676731, lng: 77.500534, altitude: 20 };
         
-        LobbyShemaWrite({lobbyId:lobbyId, userId: userId, lat: location.lat, lng: location.lng,  heading: 20 });
+        LobbyShemaWrite({lobbyId:lobbyId, userId: userId, lat: location.lat, lng: location.lng,  heading: Bearing });
         
         const syncMarker=async()=>{
             
@@ -88,12 +90,14 @@ export default function MapInterface({lobbyId,userId}:{lobbyId:string,userId:str
                     unsubscribe = LobbySchemaRead(lobbyId, async (data) => {
                         console.log("data",data);
                         const allusersIds=Object.keys(data);
-                        console.log("allusersIds",allusersIds);
                         
                         const buddyId=allusersIds.find((id)=>id.startsWith("buddy-")&& id!==userId)
                         const buddyData=buddyId?data[buddyId]:null;
                         const myData=userId?data[userId]:null;
+                         console.log("bearing",Bearing);
+                         
                         if(buddyData){
+                            setBuddypos({lat:buddyData.lat,lng:buddyData.lng})
                             const updatedFriendPos = { lat: buddyData.lat, lng: buddyData.lng, altitude: 20 };
                             if(myFriendMarkerRef.current) myFriendMarkerRef.current.position = updatedFriendPos;
                         }
@@ -124,9 +128,10 @@ useEffect(()=>{
     const handleOrientation = (e: DeviceOrientationEvent) => {
         // const heading= e.webkitCompassHeading ??e.alpha;
         const deviceHeading= e.alpha;  //for android
-        if(deviceHeading!==null && location){
+        if(deviceHeading!==null && location && buddypos){
             
-            const bearing=getBearing({mylat:location.lat,mylng:location.lng,buddylat: 28.676731, buddylng: 77.500534})
+            const bearing=getBearing({mylat:location.lat,mylng:location.lng,buddylat: buddypos.lat, buddylng: buddypos.lng})
+            setBearing(bearing);
             console.log("dir:",bearing); 
             const relative=getRelativeBearing(bearing,deviceHeading);
             console.log("Relative dir:",relative); 
@@ -143,7 +148,7 @@ useEffect(()=>{
         window.removeEventListener('deviceorientationabsolute', handleOrientation);
     };
     
-},[location])
+},[location,buddypos])
 
    const handleShareLink=async()=>{
         const buddyNo="buddy-"+Math.floor(1000+Math.random()*9000);
